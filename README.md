@@ -40,7 +40,7 @@ EKS Blueprints for Terraform is maintained by AWS Solution Architects. It is not
 
 To post feedback, submit feature ideas, or report bugs, please use the [Issues section](https://github.com/aws-solutions-library-samples/guidance-for-automated-provisioning-of-amazon-elastic-kubernetes-service-using-terraform/issues) of this GitHub repo.
 
-If you are interested in contributing to EKS Blueprints, see the [Contribution guide](https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/CONTRIBUTING.md).
+If you are interested in contributing to EKS Blueprints, see the [Contribution guide](https://github.com/aws-solutions-library-samples/guidance-for-automated-provisioning-of-amazon-elastic-kubernetes-service-using-terraform/blob/main/CONTRIBUTING.md).
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
