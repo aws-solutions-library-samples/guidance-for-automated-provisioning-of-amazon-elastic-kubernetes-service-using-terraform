@@ -30,14 +30,12 @@ data "aws_availability_zones" "available" {
 locals {
   name = basename(path.cwd)
   # var.cluster_name is for Terratest
-  # DZ: add unique postfix to avioid duplication or 'global' role names derived from a cluster name
-  # cluster_name = coalesce(var.cluster_name, local.name)
-  
+  # cluster_name = coalesce(var.cluster_name, local.name)  
   cluster_name1 = coalesce(var.cluster_name, local.name)
-  #DZ: add unique suffix at the end of cluster_name1
-  cluster_name = "${local.cluster_name1}-dz2"
+  #DZ: add unique suffix at the end of cluster_name1 for unique 'global' role names
+  cluster_name = "${local.cluster_name1}-dz"
   
-  #DZ: us-west-1 region had consistent compute node deployment failures  
+  #DZ: us-west-1 region had more resources please change to preferred region of your choice
   region       = "us-west-1"
 
   vpc_cidr = "10.0.0.0/16"
@@ -58,7 +56,6 @@ locals {
 module "eks_blueprints" {
   source = "../.."
 
-   
   cluster_name    = local.cluster_name
   # DZ: current version of K8s is 1.24 - may want to change it here
   cluster_version = "1.24"
@@ -66,12 +63,12 @@ module "eks_blueprints" {
   vpc_id             = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnets
 
-  # DZ: configuration for data plane: name, AMI type and limits   
+  # DZ: configuration for compute plane: name, AMI type and limits   
   managed_node_groups = {
     mg_5 = {
       node_group_name = "managed-ondemand"
       #DZ: instance AMI type, min, amx and desire number of compute nodes and ASG parameters - up the node size for fluentbit etc.
-      instance_types  = ["m5.2xlarge"]
+      instance_types  = ["m5.xlarge"]
       min_size        = 2
       max_size        = 4
       desired_size    = 3
