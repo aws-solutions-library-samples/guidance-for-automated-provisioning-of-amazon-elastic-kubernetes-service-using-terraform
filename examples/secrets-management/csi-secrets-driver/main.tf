@@ -40,7 +40,9 @@ locals {
 
   tags = {
     Blueprint  = local.name
-    GithubRepo = "github.com/aws-ia/terraform-aws-eks-blueprints"
+    # GithubRepo = "github.com/aws-ia/terraform-aws-eks-blueprints"
+    # DZ: need to point to this new repository
+    GithubRepo = "github.com/aws-solutions-library-samples/guidance-for-automated-provisioning-of-amazon-elastic-kubernetes-service-using-terraform"
   }
 
   application = "nginx"
