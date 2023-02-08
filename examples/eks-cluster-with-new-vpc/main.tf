@@ -35,7 +35,7 @@ locals {
   #DZ: add unique suffix at the end of cluster_name1 for unique 'global' role names
   cluster_name = "${local.cluster_name1}-dz"
   
-  #DZ: us-west-1 region had more resources please change to preferred region of your choice
+  #DZ: us-west-1 region had more resources, please change to preferred region of your choice
   region       = "us-west-1"
 
   vpc_cidr = "10.0.0.0/16"
@@ -45,7 +45,9 @@ locals {
 
   tags = {
     Blueprint  = local.name
-    GithubRepo = "github.com/dzilbermanvmw/terraform-aws-eks-blueprints"
+    #GithubRepo = "github.com/dzilbermanvmw/terraform-aws-eks-blueprints"
+    #DZ: need to point to this new repository
+    GithubRepo = "github.com/aws-solutions-library-samples/guidance-for-automated-provisioning-of-amazon-elastic-kubernetes-service-using-terraform"
   }
 }
 
