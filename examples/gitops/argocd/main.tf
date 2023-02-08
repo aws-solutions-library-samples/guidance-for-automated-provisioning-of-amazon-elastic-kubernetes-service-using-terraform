@@ -32,7 +32,7 @@ locals {
   #DZ: add unique suffix at the end of cluster_name1
   name = "${local.name1}-dz2"
   
-  #DZ: us-west-2 region had consistent compute node deployment failures  
+  #DZ: us-west-2 region had consistent compute node deployment failures, please replace with a value with another target region if needed 
   region       = "us-west-2"
   
 
@@ -41,7 +41,9 @@ locals {
 
   tags = {
     Blueprint  = local.name
-    GithubRepo = "github.com/dzilbermanvmw/terraform-aws-eks-blueprints"
+    #GithubRepo = "github.com/dzilbermanvmw/terraform-aws-eks-blueprints"
+    #DZ: need to point to this repo here 
+    GithubRepo = "github.com/aws-solutions-library-samples/guidance-for-automated-provisioning-of-amazon-elastic-kubernetes-service-using-terraform"
   }
 }
 
