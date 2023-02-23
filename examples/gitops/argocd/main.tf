@@ -26,21 +26,22 @@ data "aws_eks_cluster_auth" "this" {
 data "aws_availability_zones" "available" {}
 
 locals {
-  #DZ: turn directory path into intermediate variable
+  #DZ: use directory path as intermediate variable
   name1   = basename(path.cwd)
-  #DZ: add unique suffix at the end of cluster_name1 - OPTIONAL, can be set directly to 'basename(path.cwd)'
+  #DZ: if needed, add unique suffix at the end of local.name1 - if needed, otherwise can be set directly to 'basename(path.cwd)'
   name = "${local.name1}-gitops"
   
-  #DZ: us-west-2 region had consistent compute node deployment failures, please replace with a value with another target region if needed 
+  #DZ: please replace with a value with another target region if needed 
   region       = "us-west-2"
   
-
   vpc_cidr = "10.0.0.0/16"
+  
+  #DZ: there may be regions with less than 3 AZs then the last digit should be changed to '2' etc
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
   tags = {
     Blueprint  = local.name
-    #GithubRepo = "github.com/dzilbermanvmw/terraform-aws-eks-blueprints"
+   
     #DZ: need to point to AWS Solutions Library repo here 
     GithubRepo = "github.com/aws-solutions-library-samples/guidance-for-automated-provisioning-of-amazon-elastic-kubernetes-service-using-terraform"
   }
@@ -84,7 +85,7 @@ module "eks_blueprints_kubernetes_addons" {
   eks_oidc_provider    = module.eks_blueprints.oidc_provider
   eks_cluster_version  = module.eks_blueprints.eks_cluster_version
 
-  # DZ: flag installation of argo-cd add-on via TF HELM plugin  
+  # flag installation of argo-cd add-on via TF HELM plugin  
   enable_argocd = true
   # This example shows how to set default ArgoCD Admin Password using SecretsManager with Helm Chart set_sensitive values.
   argocd_helm_config = {
@@ -96,7 +97,7 @@ module "eks_blueprints_kubernetes_addons" {
     ]
   }
     
-  # DZ: configure plugin KEDA event driven architecture
+  # configure plugin KEDA event driven architecture
   keda_helm_config = {
     values = [
       {
@@ -167,6 +168,24 @@ resource "aws_secretsmanager_secret_version" "arogcd" {
   secret_string = random_password.argocd.result
 }
 
+#--------------------------------------------------------------
+# Adding guidance solution ID via AWS CloudFormation resource
+#--------------------------------------------------------------
+resource "aws_cloudformation_stack" "guidance_deployment_metrics" {
+    name = "tracking-stack"
+    template_body = <<STACK
+    {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "AWS Guidance ID (SO9166)",
+        "Resources": {
+            "EmptyResource": {
+                "Type": "AWS::CloudFormation::WaitConditionHandle"
+            }
+        }
+    }
+    STACK
+}
+    
 #---------------------------------------------------------------
 # Supporting Resources
 #---------------------------------------------------------------
