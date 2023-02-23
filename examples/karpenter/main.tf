@@ -42,7 +42,7 @@ locals {
   tags = {
     Blueprint  = local.name
     
-    # DZ: need to point to this new repository
+    # DZ: need to point to this repository
     GithubRepo = "github.com/aws-solutions-library-samples/guidance-for-automated-provisioning-of-amazon-elastic-kubernetes-service-using-terraform"
   }
 }
@@ -255,7 +255,7 @@ resource "aws_cloudformation_stack" "guidance_deployment_metrics" {
     template_body = <<STACK
     {
         "AWSTemplateFormatVersion": "2010-09-09",
-        "Description": "AWS Guidance ID (SO9166)",
+        "Description": "AWS Guidance ID (SOXXXXX)",
         "Resources": {
             "EmptyResource": {
                 "Type": "AWS::CloudFormation::WaitConditionHandle"
