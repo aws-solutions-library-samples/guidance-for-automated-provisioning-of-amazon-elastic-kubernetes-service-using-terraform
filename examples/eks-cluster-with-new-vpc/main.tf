@@ -32,21 +32,21 @@ locals {
   # var.cluster_name is for Terratest
   # cluster_name = coalesce(var.cluster_name, local.name)  
   cluster_name1 = coalesce(var.cluster_name, local.name)
-  #DZ: add unique suffix at the end of cluster_name1 for unique 'global' role names
+  #DZ: may add unique suffix at the end of cluster_name1 for unique 'global' role names if deploying multiple instances to diff regions
   cluster_name = "${local.cluster_name1}-dz"
   
-  #DZ: us-west-1 region had more resources, please change to preferred region of your choice
+  #DZ: please change to preferred region of your choice
   region       = "us-west-1"
 
   vpc_cidr = "10.0.0.0/16"
-  #azs      = slice(data.aws_availability_zones.available.names, 0, 3)
-  #DZ reduce number of AZs to poll for other than us-west-2 regions
-  azs      = slice(data.aws_availability_zones.available.names, 0, 2)
+  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
+  # if need to,reduce number of AZs to poll for other than us-west-2 regions
+  # azs      = slice(data.aws_availability_zones.available.names, 0, 2)
 
   tags = {
     Blueprint  = local.name
-    #GithubRepo = "github.com/dzilbermanvmw/terraform-aws-eks-blueprints"
-    #DZ: need to point to this new repository
+   
+    # need to point to this repository
     GithubRepo = "github.com/aws-solutions-library-samples/guidance-for-automated-provisioning-of-amazon-elastic-kubernetes-service-using-terraform"
   }
 }
@@ -59,7 +59,7 @@ module "eks_blueprints" {
   source = "../.."
 
   cluster_name    = local.cluster_name
-  # DZ: current version of K8s is 1.24 - may want to change it here
+  # DZ: current supported version of K8s is 1.24 - change it to another values if desired
   cluster_version = "1.24"
 
   vpc_id             = module.vpc.vpc_id
@@ -79,9 +79,9 @@ module "eks_blueprints" {
   }
 
   tags = local.tags
-} #DZ end of eks_blueprints module
+} # end of eks_blueprints module
 
-#DZ: EKS add-ons module below
+# EKS add-ons module below
     
 module "eks_blueprints_kubernetes_addons" {
   source = "../../modules/kubernetes-addons"
@@ -128,10 +128,28 @@ module "eks_blueprints_kubernetes_addons" {
   # enable_cert_manager_csi_driver = true
 
   tags = local.tags
-} # DZ end of eks_blueprints_kubernetes_addons module
+} # end of eks_blueprints_kubernetes_addons module
 
+#--------------------------------------------------------------
+# Adding guidance solution ID via AWS CloudFormation resource
+#--------------------------------------------------------------
+resource "aws_cloudformation_stack" "guidance_deployment_metrics" {
+    name = "tracking-stack"
+    template_body = <<STACK
+    {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "AWS Guidance ID (SO9166)",
+        "Resources": {
+            "EmptyResource": {
+                "Type": "AWS::CloudFormation::WaitConditionHandle"
+            }
+        }
+    }
+    STACK
+}
+    
 #---------------------------------------------------------------
-# Supporting Resources
+# Supporting AWS Resources
 #---------------------------------------------------------------
 
 module "vpc" {
