@@ -36,11 +36,11 @@ locals {
   cluster_name = "${local.cluster_name1}-dz"
   
   #DZ: please change to preferred region of your choice
-  region       = "us-west-1"
+  region       = "us-west-2"
 
   vpc_cidr = "10.0.0.0/16"
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
-  # if need to,reduce number of AZs to poll for other than us-west-2 regions
+  #DZ: if need to,reduce number of AZs to poll for other than us-west-2 regions
   # azs      = slice(data.aws_availability_zones.available.names, 0, 2)
 
   tags = {
