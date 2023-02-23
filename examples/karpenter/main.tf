@@ -41,7 +41,7 @@ locals {
 
   tags = {
     Blueprint  = local.name
-    # GithubRepo = "github.com/aws-ia/terraform-aws-eks-blueprints"
+    
     # DZ: need to point to this new repository
     GithubRepo = "github.com/aws-solutions-library-samples/guidance-for-automated-provisioning-of-amazon-elastic-kubernetes-service-using-terraform"
   }
@@ -55,7 +55,7 @@ module "eks_blueprints" {
   source = "../.."
 
   cluster_name    = local.name
-  cluster_version = "1.23"
+  cluster_version = "1.24"
 
   vpc_id             = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnets
@@ -247,6 +247,24 @@ resource "kubectl_manifest" "datadog_agent" {
   YAML
 }
 
+#--------------------------------------------------------------
+# Adding guidance solution ID via AWS CloudFormation resource
+#--------------------------------------------------------------
+resource "aws_cloudformation_stack" "guidance_deployment_metrics" {
+    name = "tracking-stack"
+    template_body = <<STACK
+    {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "AWS Guidance ID (SO9166)",
+        "Resources": {
+            "EmptyResource": {
+                "Type": "AWS::CloudFormation::WaitConditionHandle"
+            }
+        }
+    }
+    STACK
+}
+  
 #---------------------------------------------------------------
 # Supporting Resources
 #---------------------------------------------------------------
