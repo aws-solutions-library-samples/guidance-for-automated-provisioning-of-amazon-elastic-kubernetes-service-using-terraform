@@ -248,22 +248,22 @@ resource "kubectl_manifest" "datadog_agent" {
 }
 
 #--------------------------------------------------------------
-# Adding guidance solution ID via AWS CloudFormation resource
+# Adding guidance solution ID via AWS CloudFormation resource - UNCOMMENT AND SPECIFY Solution ID when available
 #--------------------------------------------------------------
-resource "aws_cloudformation_stack" "guidance_deployment_metrics" {
-    name = "tracking-stack"
-    template_body = <<STACK
-    {
-        "AWSTemplateFormatVersion": "2010-09-09",
-        "Description": "AWS Guidance ID (SOXXXXX)",
-        "Resources": {
-            "EmptyResource": {
-                "Type": "AWS::CloudFormation::WaitConditionHandle"
-            }
-        }
-    }
-    STACK
-}
+#resource "aws_cloudformation_stack" "guidance_deployment_metrics" {
+#    name = "tracking-stack"
+#    template_body = <<STACK
+#    {
+#        "AWSTemplateFormatVersion": "2010-09-09",
+#        "Description": "AWS Guidance ID (SOXXXXX)",
+#        "Resources": {
+#            "EmptyResource": {
+#                "Type": "AWS::CloudFormation::WaitConditionHandle"
+#            }
+#        }
+#    }
+#    STACK
+# }
   
 #---------------------------------------------------------------
 # Supporting Resources
