@@ -23,6 +23,7 @@ provider "grafana" {
 
 locals {
   name   = basename(path.cwd)
+  #DZ: update value to another region, if needed
   region = "us-west-2"
 
   vpc_cidr = "10.0.0.0/16"
@@ -30,7 +31,6 @@ locals {
 
   tags = {
     Blueprint  = local.name
-  
     # DZ: need to point to this new repository
     GithubRepo = "github.com/aws-solutions-library-samples/guidance-for-automated-provisioning-of-amazon-elastic-kubernetes-service-using-terraform"
   }
@@ -43,7 +43,8 @@ module "eks_blueprints" {
   source = "../../.."
 
   cluster_name    = local.name
-  cluster_version = "1.23"
+  #DZ: set EKS K8s API version here
+  cluster_version = "1.24"
 
   vpc_id             = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnets
