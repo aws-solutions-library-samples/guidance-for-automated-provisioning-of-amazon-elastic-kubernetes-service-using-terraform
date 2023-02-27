@@ -35,16 +35,18 @@ data "aws_availability_zones" "available" {}
 
 locals {
   name   = basename(path.cwd)
+  #DZ: update value to another region if needed
   region = "us-west-2"
 
-  cluster_version = "1.23"
+  cluster_version = "1.24"
 
   vpc_cidr = "10.0.0.0/16"
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
   tags = {
     Blueprint  = local.name
-    GithubRepo = "github.com/aws-ia/terraform-aws-eks-blueprints"
+    #DZ: need to point to AWS Solutions Library repo here 
+    GithubRepo = "github.com/aws-solutions-library-samples/guidance-for-automated-provisioning-of-amazon-elastic-kubernetes-service-using-terraform"
   }
 }
 
