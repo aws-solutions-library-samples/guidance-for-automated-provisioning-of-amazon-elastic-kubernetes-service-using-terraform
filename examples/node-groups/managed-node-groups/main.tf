@@ -37,7 +37,8 @@ locals {
   name   = basename(path.cwd)
   #DZ: update value to another region if needed
   region = "us-west-2"
-
+  
+  #DZ: specify EKS K8s API version if needed 
   cluster_version = "1.24"
 
   vpc_cidr = "10.0.0.0/16"
