@@ -32,15 +32,15 @@ locals {
   # var.cluster_name is for Terratest
   # cluster_name = coalesce(var.cluster_name, local.name)  
   cluster_name1 = coalesce(var.cluster_name, local.name)
-  #DZ: may add unique suffix at the end of cluster_name1 for unique 'global' role names if deploying multiple instances to diff regions
-  cluster_name = "${local.cluster_name1}-dz"
+  # may add unique suffix at the end of cluster_name1 for unique 'global' role names if deploying multiple instances to diff regions
+  cluster_name = "${local.cluster_name1}"
   
-  #DZ: please change to preferred region of your choice
-  region       = "us-west-2"
+  #please change to preferred region of your choice
+  region       = "us-east-1"
 
   vpc_cidr = "10.0.0.0/16"
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
-  #DZ: if need to,reduce number of AZs to poll for other than us-west-2 regions
+  #if need to,reduce number of AZs to poll for other than us-east-1 regions
   # azs      = slice(data.aws_availability_zones.available.names, 0, 2)
 
   tags = {
@@ -59,17 +59,17 @@ module "eks_blueprints" {
   source = "../.."
 
   cluster_name    = local.cluster_name
-  # DZ: current supported version of K8s is 1.24 - change it to another values if desired
+  # current supported version of K8s is 1.24 - change it to another values if desired
   cluster_version = "1.24"
 
   vpc_id             = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnets
 
-  # DZ: configuration for compute plane: name, AMI type and limits   
+  # configuration for compute plane: name, AMI type and limits   
   managed_node_groups = {
     mg_5 = {
       node_group_name = "managed-ondemand"
-      #DZ: instance AMI type, min, amx and desire number of compute nodes and ASG parameters - up the node size for fluentbit etc.
+      # instance AMI type, min, amx and desire number of compute nodes and ASG parameters - up the node size for fluentbit etc.
       instance_types  = ["m5.xlarge"]
       min_size        = 2
       max_size        = 4
