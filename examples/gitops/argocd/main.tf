@@ -26,23 +26,25 @@ data "aws_eks_cluster_auth" "this" {
 data "aws_availability_zones" "available" {}
 
 locals {
-  #DZ: use directory path as intermediate variable
+  # use directory path as intermediate variable
   name1   = basename(path.cwd)
-  #DZ: if needed, add unique suffix at the end of local.name1 - if needed, otherwise can be set directly to 'basename(path.cwd)'
-  name = "${local.name1}-gitops"
+  # if needed, add unique suffix at the end of local.name1 - if needed, otherwise can be set directly to 'basename(path.cwd)'
+  # name = "${local.name1}-gitops"
+  name = "${local.name1}
   
-  #DZ: please replace with a value with another target region if needed 
+  # please replace with a value with another target region, if needed 
   region       = "us-west-2"
   
   vpc_cidr = "10.0.0.0/16"
   
-  #DZ: there may be regions with less than 3 AZs then the last digit should be changed to '2' etc
+  # there may be regions with less than 3 AZs then the last digit should be changed to '2' etc
+  # azs      = slice(data.aws_availability_zones.available.names, 0, 3)
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
   tags = {
     Blueprint  = local.name
    
-    #DZ: need to point to AWS Solutions Library repo here 
+    # need to point to AWS Solutions Library repo here 
     GithubRepo = "github.com/aws-solutions-library-samples/guidance-for-automated-provisioning-of-amazon-elastic-kubernetes-service-using-terraform"
   }
 }
@@ -53,10 +55,10 @@ locals {
 
 module "eks_blueprints" {
   source = "../../.."
-
+  # assign EKS cluster name
   cluster_name    = local.name
 
-  # DZ: target K8s version, please update to desired value supported by EKS 
+  # target K8s version, please update to desired value supported by EKS 
   cluster_version = "1.24"
 
   vpc_id             = module.vpc.vpc_id
